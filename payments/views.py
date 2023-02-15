@@ -3,8 +3,6 @@ from django.conf import settings
 from django.http import JsonResponse
 from .models import Item
 
-import json
-
 import stripe
 
 

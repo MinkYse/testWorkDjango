@@ -39,14 +39,14 @@ def get_session_id(request, item_id):
 
 
 def get_item(request, item_id):
-    item = get_object_or_404(Item, pk=item_id)
-    if item.currency == 'usd':
-        pub = settings.STRIPE_PUBLIC_KEY_USD
-    else:
-        pub = settings.STRIPE_PUBLIC_KEY_RUB
-    print(request.build_absolute_uri('/')[:-1])
-    context = {
-        'item': item,
-        'stripe_public_key': pub
-    }
-    return render(request, 'item.html', context)
+    if request.method == 'GET':
+        item = get_object_or_404(Item, pk=item_id)
+        if item.currency == 'usd':
+            pub = settings.STRIPE_PUBLIC_KEY_USD
+        else:
+            pub = settings.STRIPE_PUBLIC_KEY_RUB
+        context = {
+            'item': item,
+            'stripe_public_key': pub
+        }
+        return render(request, 'item.html', context)

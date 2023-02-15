@@ -23,12 +23,8 @@ class Item(models.Model):
     price = models.IntegerField(default=0)
     currency = models.CharField(max_length=3, default='usd')
 
-    class Meta:
-        verbose_name = 'Item'
-        verbose_name_plural = 'Items'
-
     def __str__(self):
-        return self.name
+        return f'Item {self.id}'
 
     def get_display_price(self):
         return "{0:.2f}".format(self.price / 100)

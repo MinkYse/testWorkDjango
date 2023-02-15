@@ -5,14 +5,10 @@ from .models import Item
 
 import stripe
 
-# Create your views here.
-
-
-YOUR_DOMAIN = "http://127.0.0.1:8000"
-
 
 def get_session_id(request, item_id):
     if request.method == 'GET':
+        domain = request.build_absolute_uri('/')[:-1]
         item = get_object_or_404(Item, pk=item_id)
         if item.currency == 'usd':
             stripe.api_key = settings.STRIPE_SECRET_KEY_USD
@@ -36,8 +32,8 @@ def get_session_id(request, item_id):
                 'item_id': item.id
             },
             mode='payment',
-            success_url=YOUR_DOMAIN + '/success/',
-            cancel_url=YOUR_DOMAIN + '/cancel/',
+            success_url=domain,
+            cancel_url=domain,
         )
         return JsonResponse({'id': checkout_session.id})
 
@@ -48,7 +44,7 @@ def get_item(request, item_id):
         pub = settings.STRIPE_PUBLIC_KEY_USD
     else:
         pub = settings.STRIPE_PUBLIC_KEY_RUB
-    print(settings.ROOT)
+    print(request.build_absolute_uri('/')[:-1])
     context = {
         'item': item,
         'stripe_public_key': pub
